@@ -61,6 +61,10 @@ export default {
     submitLogin(){
       loginApi.submitLogin(this.user).then(response => {
         if(response.data.success){
+          this.$message({
+            type:"success",
+            message:"登录成功！"
+          })
 //把token存在cookie中、也可以放在localStorage中
           cookie.set('guli_token', response.data.data.token, { domain: 'localhost' })
 //登录成功根据token获取用户信息
@@ -74,7 +78,14 @@ export default {
             window.location.href = "/";  //用BOM跳转会导致控制台输出消失，因为相当于重新发起一次请求，而不是router的单页面路由
             // this.$router.push("/")  //使用路由跳转会导致第一次登录时无法显示用户信息，因为在路由跳转前页面已经通过v-if确定了显示登录按钮，即使路由跳转也只在当前页面，并没有刷新页面，所以并没有再次判断v-if,所以这里用BOM跳转好一些。
           })
+        }else{
+          console.log(response)
+          this.$message({
+            type:"error",
+            message:response.data.message
+          })
         }
+
       })
     },
     checkEmail (rule, value, callback) {
